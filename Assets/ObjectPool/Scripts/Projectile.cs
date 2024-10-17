@@ -14,13 +14,24 @@ public class Projectile : MonoBehaviour {
 
     public float knockBack = 0.1f;
     public float boomTimer = 1;
+
+    private float activeBoomTimer;
+
     //public Vector3 _startPosition;
     //public float dist;
 
-    public ParticleSystem explosion;
+    TrailRenderer trailRenderer;
 
-    private void Start()
+    private void OnEnable()
     {
+        if (!trailRenderer)
+        {
+            trailRenderer = GetComponentInChildren<TrailRenderer>();
+        }
+
+        if (!target) { gameObject.SetActive(false); return; }
+        trailRenderer?.Clear();
+        activeBoomTimer = boomTimer;
         if (catapult)
         {
             lockOn = true;
@@ -46,8 +57,8 @@ public class Projectile : MonoBehaviour {
             Explosion();
         }
 
-        boomTimer -= Time.deltaTime;
-        if (boomTimer < 0)
+        activeBoomTimer -= Time.deltaTime;
+        if (activeBoomTimer < 0)
         {
             Explosion();
         }
@@ -115,7 +126,9 @@ public class Projectile : MonoBehaviour {
 
     public void Explosion()
     {
-        Instantiate(explosion, transform.position, transform.rotation);
-        Destroy(gameObject);
+        GameObject explosion = ObjectPool.Instance.GetObject("Eff_Explosion");
+        explosion.transform.position = transform.position;
+        explosion.transform.rotation = transform.rotation;
+        gameObject.SetActive(false);
     }
 }

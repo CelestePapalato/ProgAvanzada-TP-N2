@@ -15,10 +15,11 @@ public class ObjectPool : MonoBehaviour
     private class Pool
     {
         private List<GameObject> objects = new List<GameObject>();
-        private GameObject ObjectToPool;
+        private GameObject gameObject;
 
         public Pool(int quantity, GameObject objectToPool)
         {
+            gameObject = objectToPool;
             for(int i = 0; i < quantity; i++)
             {
                 IncreasePool();
@@ -27,7 +28,7 @@ public class ObjectPool : MonoBehaviour
 
         private GameObject IncreasePool()
         {
-            GameObject obj = Instantiate(ObjectToPool);
+            GameObject obj = Instantiate(gameObject);
             obj.SetActive(false);
             objects.Add(obj);
             return obj;

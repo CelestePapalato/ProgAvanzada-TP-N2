@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static TurretAI;
 
 public abstract class Turret : MonoBehaviour
 {
@@ -12,15 +9,14 @@ public abstract class Turret : MonoBehaviour
     public float attackDamage;
     public float shootCoolDown;
     protected float timer;
-    public float loockSpeed;
+    public float lockSpeed;
 
     //public Quaternion randomRot;
     public Vector3 randomRot;
     public Animator animator;
 
     public Transform muzzleMain;
-    public Transform muzzleSub;
-    public string muzzleEff_tag;
+    public string muzzleEff_tag = "Eff_Muzzle";
     public string bullet_tag;
 
     protected Transform lockOnPos;
@@ -81,13 +77,7 @@ public abstract class Turret : MonoBehaviour
         }
     }
 
-    protected virtual void FollowTarget() //todo : smooth rotate
-    {
-        Vector3 targetDir = currentTarget.transform.position - turreyHead.position;
-        targetDir.y = 0;
-        turreyHead.transform.rotation = Quaternion.RotateTowards(turreyHead.rotation, Quaternion.LookRotation(targetDir), loockSpeed * Time.deltaTime);
-    }
-
+    protected abstract void FollowTarget();
     protected void ShootTrigger()
     {
         Shoot(currentTarget);
@@ -125,7 +115,7 @@ public abstract class Turret : MonoBehaviour
 
         if (turreyHead.rotation != Quaternion.Euler(randomRot))
         {
-            turreyHead.rotation = Quaternion.RotateTowards(turreyHead.transform.rotation, Quaternion.Euler(randomRot), loockSpeed * Time.deltaTime * 0.2f);
+            turreyHead.rotation = Quaternion.RotateTowards(turreyHead.transform.rotation, Quaternion.Euler(randomRot), lockSpeed * Time.deltaTime * 0.2f);
         }
         else
         {
@@ -144,6 +134,10 @@ public abstract class Turret : MonoBehaviour
     public virtual void Shoot(GameObject go)
     {
         InstantiateMuzzle();
+        GameObject bullet = InstantiateBullet();
+        Projectile projectile = bullet.GetComponent<Projectile>();
+        InitializeProjectile(projectile, go);
+        bullet.SetActive(true);
     }
 
     protected void InstantiateMuzzle()
@@ -151,6 +145,16 @@ public abstract class Turret : MonoBehaviour
         GameObject muzzleEff = ObjectPool.Instance.GetObject(muzzleEff_tag);
         muzzleEff.transform.position = muzzleMain.transform.position;
         muzzleEff.transform.rotation = muzzleMain.rotation;
-        muzzleEff.SetActive(true);
+    }
+
+    protected abstract void InitializeProjectile(Projectile projectile, GameObject go);
+
+    protected virtual GameObject InstantiateBullet()
+    {
+        GameObject missleGo = ObjectPool.Instance.GetObject(bullet_tag);
+        missleGo.transform.position = muzzleMain.transform.position;
+        missleGo.transform.rotation = muzzleMain.rotation;
+        missleGo.SetActive(true);
+        return missleGo;
     }
 }
