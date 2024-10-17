@@ -720,11 +720,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectsToPool:
-  - objectToPool: {fileID: 1833988619539146, guid: 9318a11cd670f3d4f924ff92fe7b0c77, type: 3}
+  - tag: azul
+    objectToPool: {fileID: 1833988619539146, guid: 9318a11cd670f3d4f924ff92fe7b0c77, type: 3}
     quantity: 8
-  - objectToPool: {fileID: 1552339098034316, guid: c13874774436a6a4c85449cab6e14fa4, type: 3}
+  - tag: rojo
+    objectToPool: {fileID: 1552339098034316, guid: c13874774436a6a4c85449cab6e14fa4, type: 3}
     quantity: 8
-  - objectToPool: {fileID: 1162392375372998, guid: 3e5b0980d9cc7a94bbb93263b9c6228d, type: 3}
+  - tag: bomba
+    objectToPool: {fileID: 1162392375372998, guid: 3e5b0980d9cc7a94bbb93263b9c6228d, type: 3}
     quantity: 8
 --- !u!4 &1389780960
 Transform:

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,8 +7,38 @@ public class ObjectPool : MonoBehaviour
     [Serializable]
     public class ObjectPoolData
     {
+        public string tag;
         public GameObject objectToPool;
         public int quantity;
+    }
+
+    private class Pool
+    {
+        private List<GameObject> objects = new List<GameObject>();
+
+        public Pool(int quantity, GameObject objectToPool)
+        {
+            for(int i = 0; i < quantity; i++)
+            {
+                GameObject obj = Instantiate(objectToPool);
+                obj.SetActive(false);
+                objects.Add(obj);
+            }
+        }
+
+        public GameObject GetObject()
+        {
+            GameObject obj = null;
+            foreach(GameObject tmp in objects)
+            {
+                if (!tmp.activeInHierarchy)
+                {
+                    obj = tmp;
+                    break;
+                }
+            }
+            return obj;
+        }
     }
 
     public static ObjectPool Instance;
@@ -17,8 +46,7 @@ public class ObjectPool : MonoBehaviour
     [SerializeField]
     ObjectPoolData[] objectsToPool;
 
-    Dictionary<string, List<GameObject>> poolData = new Dictionary<string, List<GameObject>>();
-
+    Dictionary<string, Pool> poolData = new Dictionary<string, Pool>();
 
     private void Awake()
     {
@@ -39,18 +67,9 @@ public class ObjectPool : MonoBehaviour
     {
         foreach (ObjectPoolData data in objectsToPool)
         {
-            for (int i = 0; i < data.quantity; i++)
+            if (!poolData.ContainsKey(data.tag))
             {
-                GameObject tmp = Instantiate(data.objectToPool);
-                tmp.SetActive(false);
-
-                string tag = data.objectToPool.tag;
-
-                if (!poolData.ContainsKey(tag))
-                {
-                    poolData.Add(tag, new List<GameObject>());
-                }
-                poolData[tag].Add(tmp);
+                poolData.Add(data.tag, new Pool(data.quantity, data.objectToPool));
             }
         }
     }
@@ -60,14 +79,7 @@ public class ObjectPool : MonoBehaviour
         GameObject obj = null;
         if (poolData.ContainsKey(tag))
         {
-            foreach(GameObject tmp in poolData[tag])
-            {
-                if (!obj.activeInHierarchy)
-                {
-                    obj = tmp;
-                    break;
-                }
-            }
+            obj = poolData[tag].GetObject();
         }
         return obj;
     }
