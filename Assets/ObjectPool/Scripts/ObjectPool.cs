@@ -15,15 +15,22 @@ public class ObjectPool : MonoBehaviour
     private class Pool
     {
         private List<GameObject> objects = new List<GameObject>();
+        private GameObject ObjectToPool;
 
         public Pool(int quantity, GameObject objectToPool)
         {
             for(int i = 0; i < quantity; i++)
             {
-                GameObject obj = Instantiate(objectToPool);
-                obj.SetActive(false);
-                objects.Add(obj);
+                IncreasePool();
             }
+        }
+
+        private GameObject IncreasePool()
+        {
+            GameObject obj = Instantiate(ObjectToPool);
+            obj.SetActive(false);
+            objects.Add(obj);
+            return obj;
         }
 
         public GameObject GetObject()
@@ -36,6 +43,10 @@ public class ObjectPool : MonoBehaviour
                     obj = tmp;
                     break;
                 }
+            }
+            if (!obj)
+            {
+                obj = IncreasePool();
             }
             return obj;
         }

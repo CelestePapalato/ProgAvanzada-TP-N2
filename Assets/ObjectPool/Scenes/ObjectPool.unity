@@ -720,15 +720,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectsToPool:
-  - tag: azul
+  - tag: Bullet_Missile
     objectToPool: {fileID: 1833988619539146, guid: 9318a11cd670f3d4f924ff92fe7b0c77, type: 3}
     quantity: 8
-  - tag: rojo
+  - tag: Bullet_Gun
     objectToPool: {fileID: 1552339098034316, guid: c13874774436a6a4c85449cab6e14fa4, type: 3}
     quantity: 8
-  - tag: bomba
+  - tag: Bullet_Catapult
     objectToPool: {fileID: 1162392375372998, guid: 3e5b0980d9cc7a94bbb93263b9c6228d, type: 3}
     quantity: 8
+  - tag: Eff_Muzzle
+    objectToPool: {fileID: 1497772684437746, guid: bd75ef4ae186f454a90b2de71bed2854, type: 3}
+    quantity: 15
 --- !u!4 &1389780960
 Transform:
   m_ObjectHideFlags: 0
