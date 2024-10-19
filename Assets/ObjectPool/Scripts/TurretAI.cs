@@ -2,21 +2,27 @@ using UnityEngine;
 
 public class TurretAI : MonoBehaviour
 {
+    [SerializeField]
+    private bool copyTurretDist = false;
+
     private GameObject currentTarget;
 
     private Turret turret;
 
-    public float attackDist = 10.0f;
+    public float detectionDist = 10.0f;
 
     private void Start()
     {
         turret = GetComponentInChildren<Turret>();
+        if(copyTurretDist && turret)
+        {
+            detectionDist = turret.attackDist;
+        }
         InvokeRepeating("CheckForTarget", 0, 0.5f);
     }
 
     private void OnDisable()
     {
-
         if (turret) { turret.Target = null; }
     }
 
@@ -25,7 +31,7 @@ public class TurretAI : MonoBehaviour
         if (currentTarget)
         {
             float currentTargetDist = Vector3.Distance(turret.transform.position, currentTarget.transform.position);
-            if (currentTargetDist > attackDist)
+            if (currentTargetDist > detectionDist)
             {
                 currentTarget = null;
                 turret.Target = null;
@@ -35,7 +41,7 @@ public class TurretAI : MonoBehaviour
 
     private void CheckForTarget()
     {
-        Collider[] colls = Physics.OverlapSphere(transform.position, attackDist);
+        Collider[] colls = Physics.OverlapSphere(transform.position, detectionDist);
         float distAway = Mathf.Infinity;
 
         for (int i = 0; i < colls.Length; i++)
@@ -56,6 +62,6 @@ public class TurretAI : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackDist);
+        Gizmos.DrawWireSphere(transform.position, detectionDist);
     }
 }

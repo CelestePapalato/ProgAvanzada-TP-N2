@@ -441,7 +441,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 915173e8f2453e740bd76a2baffc2f03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDist: 10
+  copyTurretDist: 0
+  detectionDist: 10
 --- !u!1 &1581709654079874
 GameObject:
   m_ObjectHideFlags: 0

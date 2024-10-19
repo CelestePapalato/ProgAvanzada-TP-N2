@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 [RequireComponent(typeof(TurretAI))]
 public abstract class Turret : MonoBehaviour
@@ -60,11 +61,21 @@ public abstract class Turret : MonoBehaviour
         }
     }
 
+    private bool IsTargetInRange()
+    {
+        if (!currentTarget) { return false; }
+        float currentTargetDist = Vector3.Distance(transform.position, currentTarget.transform.position);
+        return currentTargetDist <= attackDist;
+    }
+
     protected abstract void FollowTarget();
     protected void ShootTrigger()
     {
-        Shoot(currentTarget);
-        //Debug.Log("We shoot some stuff!");
+        if(IsTargetInRange())
+        {
+            Shoot(currentTarget);
+            //Debug.Log("We shoot some stuff!");
+        }
     }
 
     protected Vector3 CalculateVelocity(Vector3 target, Vector3 origen, float time)
