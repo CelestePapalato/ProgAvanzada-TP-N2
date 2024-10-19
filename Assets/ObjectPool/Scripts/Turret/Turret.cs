@@ -145,6 +145,7 @@ public abstract class Turret : MonoBehaviour
         GameObject muzzleEff = ObjectPool.Instance.GetObject(muzzleEff_tag);
         muzzleEff.transform.position = muzzleMain.transform.position;
         muzzleEff.transform.rotation = muzzleMain.rotation;
+        muzzleEff.SetActive(true);
     }
 
     protected abstract void InitializeProjectile(Projectile projectile, GameObject go);
