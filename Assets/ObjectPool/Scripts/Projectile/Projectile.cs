@@ -10,6 +10,10 @@ public class Projectile : MonoBehaviour {
     public float knockBack = 0.1f;
     public float boomTimer = 1;
 
+    public float minHeight = -0.2F;
+
+    public string explosion_tag = "Eff_Explosion";
+
     private float activeBoomTimer;
 
     TrailRenderer trailRenderer;
@@ -23,25 +27,33 @@ public class Projectile : MonoBehaviour {
 
         if (!target) { gameObject.SetActive(false); return; }
         trailRenderer?.Clear();
-        activeBoomTimer = boomTimer;
+        Invoke(nameof(Explosion), boomTimer);
+    }
+
+    private void OnDestroy()
+    {
+        CancelInvoke(nameof(Explosion));
     }
 
     protected virtual void Update()
     {
-        if (target == null)
+        ExplodeOnTargetNull();
+        ExplodeOnLowHeight();
+    }
+
+    private void ExplodeOnTargetNull()
+    {
+        if (!enabled) { return; }
+        if(target == null)
         {
             Explosion();
-            return;
         }
+    }
 
-        if (transform.position.y < -0.2F)
-        {
-            Explosion();
-            return;
-        }
-
-        activeBoomTimer -= Time.deltaTime;
-        if (activeBoomTimer < 0)
+    private void ExplodeOnLowHeight()
+    {
+        if (!enabled) { return; }
+        if (transform.position.y < minHeight)
         {
             Explosion();
         }
@@ -62,7 +74,7 @@ public class Projectile : MonoBehaviour {
 
     public void Explosion()
     {
-        GameObject explosion = ObjectPool.Instance.GetObject("Eff_Explosion");
+        GameObject explosion = ObjectPool.Instance.GetObject(explosion_tag);
         explosion.transform.position = transform.position;
         explosion.transform.rotation = transform.rotation;
         explosion.SetActive(true);
