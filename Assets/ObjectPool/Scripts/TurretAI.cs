@@ -18,7 +18,7 @@ public class TurretAI : MonoBehaviour
         {
             detectionDist = turret.attackDist;
         }
-        InvokeRepeating("CheckForTarget", 0, 0.5f);
+        InvokeRepeating(nameof(CheckForTarget), 0, 0.5f);
     }
 
     private void OnDisable()

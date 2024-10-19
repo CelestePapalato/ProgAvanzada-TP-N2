@@ -12,13 +12,13 @@ public abstract class Turret : MonoBehaviour
         {
             if(currentTarget == null)
             {
-                InvokeRepeating("ShootTrigger", 0f, shootCoolDown);
+                InvokeRepeating(nameof(ShootTrigger), 0f, shootCoolDown);
             }
             else
             {
                 if (!value)
                 {
-                    CancelInvoke("ShootTrigger");
+                    CancelInvoke(nameof(ShootTrigger));
                 }
             }
             currentTarget = value;
