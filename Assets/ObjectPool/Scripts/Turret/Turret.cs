@@ -1,8 +1,28 @@
 using UnityEngine;
 
+[RequireComponent(typeof(TurretAI))]
 public abstract class Turret : MonoBehaviour
 {
-    public GameObject currentTarget;
+    protected GameObject currentTarget;
+    public GameObject Target
+    {
+        get => currentTarget;
+        set
+        {
+            if(currentTarget == null)
+            {
+                InvokeRepeating("ShootTrigger", 0f, shootCoolDown);
+            }
+            else
+            {
+                if (!value)
+                {
+                    CancelInvoke("ShootTrigger");
+                }
+            }
+            currentTarget = value;
+        }
+    }
     public Transform turreyHead;
 
     public float attackDist = 10.0f;
@@ -23,57 +43,20 @@ public abstract class Turret : MonoBehaviour
 
     protected virtual void Start()
     {
-        InvokeRepeating("CheckForTarget", 0, 0.5f);
+        //InvokeRepeating("CheckForTarget", 0, 0.5f);
         animator = GetComponentInChildren<Animator>();
         randomRot = new Vector3(0, Random.Range(0, 359), 0);
     }
 
     protected virtual void Update()
     {
-        if (currentTarget != null)
+        if (currentTarget)
         {
             FollowTarget();
-
-            float currentTargetDist = Vector3.Distance(transform.position, currentTarget.transform.position);
-            if (currentTargetDist > attackDist)
-            {
-                currentTarget = null;
-            }
         }
         else
         {
             IdleRotate();
-        }
-
-        timer += Time.deltaTime;
-        if (timer >= shootCoolDown)
-        {
-            if (currentTarget != null)
-            {
-                timer = 0;
-
-                animator?.SetTrigger("Fire");
-                ShootTrigger();
-            }
-        }
-    }
-
-    protected void CheckForTarget()
-    {
-        Collider[] colls = Physics.OverlapSphere(transform.position, attackDist);
-        float distAway = Mathf.Infinity;
-
-        for (int i = 0; i < colls.Length; i++)
-        {
-            if (colls[i].tag == "Player")
-            {
-                float dist = Vector3.Distance(transform.position, colls[i].transform.position);
-                if (dist < distAway)
-                {
-                    currentTarget = colls[i].gameObject;
-                    distAway = dist;
-                }
-            }
         }
     }
 
@@ -133,6 +116,7 @@ public abstract class Turret : MonoBehaviour
 
     public virtual void Shoot(GameObject go)
     {
+        animator?.SetTrigger("Fire");
         InstantiateMuzzle();
         GameObject bullet = InstantiateBullet();
         Projectile projectile = bullet.GetComponent<Projectile>();
