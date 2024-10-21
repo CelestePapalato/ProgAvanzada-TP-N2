@@ -45,6 +45,9 @@ public class PropInstancer : MonoBehaviour
         {
             return;
         }
+        Vector2 mousePosition = Input.mousePosition;
+        var ray = Camera.main.ScreenPointToRay(new Vector3(mousePosition.x, mousePosition.y, 0));
+        Debug.DrawRay(ray.origin, ray.direction * 5000, Color.red);
         if (Input.GetMouseButtonDown(0))
         {
             TryInstance();
@@ -56,6 +59,7 @@ public class PropInstancer : MonoBehaviour
         Vector3 position;
         if(!GetMousePosition(out position))
         {
+            Debug.Log("No floor detected");
             return;
         }
         factory.GetProduct(propName, position);
@@ -64,9 +68,10 @@ public class PropInstancer : MonoBehaviour
     private bool GetMousePosition(out Vector3 worldPosition)
     {
         worldPosition = Vector3.zero;
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Vector2 mousePosition = Input.mousePosition;
+        var ray = Camera.main.ScreenPointToRay(new Vector3(mousePosition.x, mousePosition.y, 0));
         RaycastHit hit;
-        if(Physics.Raycast(ray, out hit, Mathf.Infinity, floorLayer.value))
+        if(Physics.Raycast(ray, out hit, floorLayer))
         {
             worldPosition = hit.point;
             return true;

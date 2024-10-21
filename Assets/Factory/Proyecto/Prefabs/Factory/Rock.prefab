@@ -131,4 +131,4 @@ MonoBehaviour:
   raycastDistance: 5
   _floorLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64

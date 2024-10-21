@@ -2,24 +2,37 @@ using UnityEngine;
 
 public class PlaceOnSurface : MonoBehaviour
 {
+    [SerializeField] float heightMargin = .1f;
     [SerializeField] float raycastDistance;
     [SerializeField] LayerMask _floorLayerMask;
 
+    LayerMask toIgnore;
+
     void Start()
     {
-        placeOnSurface();
+        Place();
     }
 
-    void placeOnSurface()
+    void InitializeToIgnoreLayer()
+    {
+
+    }
+
+    void Place()
     {
         RaycastHit hit;
-        float heightAddition = transform.localScale.y / 2;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, raycastDistance, _floorLayerMask))
+        Vector3 position = transform.position;
+        position.y += heightMargin;
+        if (Physics.Raycast(position, Vector3.down, out hit, raycastDistance, _floorLayerMask))
         {
-            Vector3 position = hit.point;
-            position.y += heightAddition;
-            transform.position = position;
+            Vector3 newPosition = hit.point;
+            transform.position = newPosition;
             return;
+        }
+        else
+        {
+            Debug.Log("Placement failed");
+            Destroy(gameObject);
         }
     }
 }

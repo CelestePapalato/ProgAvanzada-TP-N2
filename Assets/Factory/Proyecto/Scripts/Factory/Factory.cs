@@ -30,7 +30,7 @@ public class Factory : MonoBehaviour
     public GameObject GetProduct(string name, Vector3 position)
     {
         GameObject toInstance;
-        if(products.TryGetValue(name, out toInstance))
+        if(!products.TryGetValue(name, out toInstance))
         {
             Debug.LogWarning($"{name} no pertenece a este Factory");
             return null;
