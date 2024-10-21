@@ -6,16 +6,9 @@ public class PlaceOnSurface : MonoBehaviour
     [SerializeField] float raycastDistance;
     [SerializeField] LayerMask _floorLayerMask;
 
-    LayerMask toIgnore;
-
     void Start()
     {
         Place();
-    }
-
-    void InitializeToIgnoreLayer()
-    {
-
     }
 
     void Place()
